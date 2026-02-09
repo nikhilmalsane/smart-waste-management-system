@@ -1,1 +1,1 @@
-# student-attendance-system
+# smart-waste-management-system
