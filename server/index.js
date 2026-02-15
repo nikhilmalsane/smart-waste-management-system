@@ -7,6 +7,8 @@ import authRoutes from "./routes/authRoutes.js"
 import binRoutes from "./routes/binRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import offlineRoutes from "./routes/offlineRoutes.js"
+import collectionRoutes from "./routes/collectionRoutes.js"
+import dashboardRoutes from "./routes/dashboardRoutes.js"
 
 dotenv.config()         
 connectDB()
@@ -16,6 +18,8 @@ app.use("/api/auth", authRoutes)
 app.use("/api/bins", binRoutes)  
 app.use("/api/users", userRoutes)
 app.use("/api/offline", offlineRoutes)
+app.use("/api/collections", collectionRoutes)
+app.use("/api/dashboard", dashboardRoutes)
  
 app.get("/",(req,res) => {
     res.send("Smart Waste Management System API is running !!!")

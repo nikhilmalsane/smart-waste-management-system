@@ -1,6 +1,12 @@
 import mongoose from "mongoose"
 
 const binSchema = new mongoose.Schema({
+    binId : {
+        type : String,
+        required : true,
+        unique : true,
+        trim : true
+    },
     location : {
         type : String,
         required : true,
@@ -15,8 +21,8 @@ const binSchema = new mongoose.Schema({
     },    
     status : {
         type : String,
-        enum : ["Empty","Partially Filled","Full"],
-        default : "Empty"
+        enum : ["empty","partial","full"],
+        default : "empty"
     },
 
     // staff assigned to collect bin

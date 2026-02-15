@@ -6,12 +6,12 @@ export const addBin = async (req,res) => {
     try {
         const { location, fillLevel, latitude, longitude } = req.body
 
-        let status = "Empty"
+        let status = "empty"
 
         if(fillLevel >= 80) {
-            status = "Full"
+            status = "full"
         } else if(fillLevel > 0) {
-            status = "Partially Filled"
+            status = "partial"
         }
 
         // new bin creation
@@ -35,13 +35,57 @@ export const addBin = async (req,res) => {
 // to fetch bins
 export const getAllBins = async (req, res) => {
     try {
+
+        // pagination
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 5
+
+        // search and filter
+        const search = req.params.search || ""
+        const area = req.query.area 
+        const status = req.query.status 
+        const sort = req.query.sort || "desc"
+
+        let filter = {}
+
+        // search by location
+        if(search) {
+            filter.location = { $regrex : search, $options : "i"}
+        }  
+
+        // filter by area 
+        if(area) {
+            filter.area = area
+        }
+
+        // filter by status
+        if(status) {
+            filter.status = status
+        }
+
+        // sorting
+        const sortOption = sort === "asc" ? 1 : -1
+
+        // for skipping the documents like if page = 2 and limit = 5
+        // skip = ( 2 - 1 ) * 5 = 5 
+        // means skip first 5 documents for page 2
+        const skip = (page - 1) * limit
+
+        const total = await Bin.countDocuments(filter)
+
         // fetch all bins from database and save in bins 
         // use populate for showing assigned staff's name and email, not only his id
-        const bins = await Bin.find().populate("assignedStaff", "name email")
+        const bins = await Bin.find(filter)
+            .populate("assignedStaff", "name email")
+            .sort({ createdAt : sortOption })
+            .skip(skip)
+            .limit(limit)
 
         res.status(200).json({
             success : true,
-            count : bins.length,
+            page,
+            totalPages : Math.ceil(total / limit),
+            totalBins : total,
             bins
         })
     } catch(error) {
@@ -69,26 +113,23 @@ export const updateBinStatus = async (req, res) => {
         // we check using assignedStaff's id and login staff's id 
         // '?' is to handle if no staff is assigned to bin
         // toString is used to compare the id's completely as object _id are normal string 
-        if( req.user.role === "staff" && bin.assignedStaff?.toString() !== req.user._id.toString ) {
-            return res.status(403).json({ message : "Access denied. You can only update your assigned bins. "})
+        if( req.user.role === "staff" && bin.assignedStaff?.toString() !== req.user._id.toString() ) {
+             return res.status(403).json({ message : "Access denied. You can only update your assigned bins. "})
         }
 
+        // staff can not manually change the status
+        if(req.user.role === "staff" && status === "empty") {
+            return res.status(400).json({ message : "Use API Collection to empty bin."})
+        }
         // if staff is correct than update the changes
-        bin.status = status
+        if(status){
+            bin.status = status
+        }
 
-        // if staff work is done then make his availablity to available
-         if( status === "empty" && bin.assignStaff) {
-            const staff = User.findById(bin.assignStaff) 
-            
-            if(staff) {
-                staff.availability = "available"
-                await staff.save()
-            }
-
-            // remove assignedStaff status
-            bin.assignStaff = null
-         }
-
+        if(fillLevel !== undefined) {
+            bin.fillLevel = fillLevel
+        }
+        
         // save updates to database
         await bin.save()
 
@@ -125,7 +166,7 @@ export const assignStaff = async (req, res) => {
 
         // if by mistaken selected admin
         if( !staff || staff.role !== "staff" ) {
-            res.status(400).json({ message : "Invalid staff selected." })
+            return res.status(400).json({ message : "Invalid staff selected." })
         }
 
         // if staff is not available 
@@ -146,6 +187,75 @@ export const assignStaff = async (req, res) => {
             message : "Staff assigned successfully."
         })
     } catch(error) {
-        res.staus(500).json({ message : "Server Error" })
+        res.status(500).json({ message : "Server Error" })
+    }
+}
+
+export const updateBin = async (req, res) => {
+    try {
+        if(req.user.role !== "admin") {
+            return res.status(403).json({ message : "Only admin can update bin." })
+        }
+
+        const { id } = req.params
+        const { location, fillLevel, latitude, longitude } = req.body
+
+        const bin = await Bin.findById(id)
+
+        if(!bin) {
+            return res.status(403).json({ message : "Bin not found." })
+        }
+
+        // update fields if given
+        if(location) bin.location = location
+        if(latitude) bin.latitude = latitude
+        if(longitude) bin.longitude = longitude
+        if(fillLevel !== undefined) {
+            bin.fillLevel = fillLevel
+        }
+
+        // automatically adjust status
+        if(fillLevel === 0){
+            bin.status = "empty"
+        } else if(fillLevel >= 80) {
+            bin.status = "full"
+        } else {
+            bin.status = "partial"
+        }
+
+        await bin.save()
+
+        res.status(200).json({
+            success : true,
+            message : "Bin Updated Succesfully.",
+            bin
+        })
+    } catch(error) {
+        res.status(500).json({ message : "Server Error" })
+    }
+}
+
+export const deleteBin = async (req, res) => {
+    try {
+        if(req.user.role !== "admin") {
+            return res.status(403).json({ message : "Only admin can delete bin." })
+        }
+
+        const { id } = req.params
+
+        const bin = await Bin.findById(id)
+
+        if(!bin) {
+            return res.status(403).json({ message : "Bin not found." })
+        }
+
+        await bin.deleteOne()
+
+        res.status(200).json({
+            success : true,
+            message : "Bin Deleted Succesfully."
+        })
+    } catch(error) {
+        res.status(500).json({ message : "Server Error" })
     }
 }

@@ -18,7 +18,7 @@ const collectionHistorySchema = new mongoose.Schema(
         },
         statusBeforeCollection : {
             type : String,
-            enum : ["Empty","Partially Filled","Full"],
+            enum : ["empty","partial","full"],
             required : true
         },
         collectedAt : {
