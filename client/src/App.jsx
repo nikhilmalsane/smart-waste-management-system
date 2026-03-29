@@ -21,7 +21,7 @@ import MyAssignedBins from "./pages/staff/MyAssignedBins.jsx"
 import MyCollections from "./pages/staff/MyCollections.jsx"
 import RequestOffline from "./pages/staff/RequestOffline.jsx"
 import Notification from "./pages/staff/Notification.jsx"
-import StaffMap from "./pages/staff/StaffMap.jsx"
+import StaffMap from "./pages/staff/StaffMap"
 import Profile from "./pages/staff/Profile.jsx"
 
 function App() {
