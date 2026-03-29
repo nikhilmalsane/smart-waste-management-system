@@ -1,5 +1,5 @@
 // Created reusable function for calling any backend API using fetch
-const BASE_URL = "http://localhost:3500/api"
+const BASE_URL = import.meta.env.VITE_API_URL
 
 // endpoint : /users/login or /bins or /admin/stats
 // method : http method ( default = GET )
