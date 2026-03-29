@@ -8,4 +8,4 @@ router.get("/admin", protect, getAdminDashboardStats )
 router.get("/staff", protect, getStaffDashboardStats)
 router.get("/map-bins", protect, getMapBins)
 
-export default router 
+export default router  

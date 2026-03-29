@@ -5,9 +5,9 @@ import authorizeRoles from "../middlewares/roleMiddleware.js"
 
 const router = express.Router()
 
-router.post("/add/", protect, authorizeRoles("admin"), addStaff)
+router.post("/add", protect, authorizeRoles("admin"), addStaff)
 router.put("/update/:id", protect, authorizeRoles("admin"), updateStaff)
 router.delete("/delete/:id", protect, authorizeRoles("admin"), deleteStaff)
 router.get("/", protect, authorizeRoles("admin"), getAllStaff)
 
-export default router  
+export default router   

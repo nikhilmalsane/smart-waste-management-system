@@ -23,7 +23,7 @@ const getIcon = (status) => {
     className: "custom-marker",
     html: `<div style="
       background:${color}
-      width:15px;
+      width:15px; 
       height:15px;
       border-radius:50%;
       border:2px solid white
@@ -37,7 +37,7 @@ function MapView() {
   const fetchBins = async () => {
     try {
       const res = await apiRequest("/bins")
-      setBins(res.data)
+      setBins(res.bins)
     } catch (error) {
       alert(error.message)
     }

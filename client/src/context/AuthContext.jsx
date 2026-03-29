@@ -5,12 +5,15 @@
 
 import { createContext, useEffect, useState } from "react";
 import { apiRequest } from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext()
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => { 
     const [user,setUser] = useState(null)     // will store log in user 
     const [token,setToken] = useState(localStorage.getItem("token"))
+
+    const navigate = useNavigate()
 
     // load user from local storage when website refreshes
     useEffect(() => {
@@ -42,6 +45,8 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
+
+        navigate("/login")
 
         setToken(null)
         setUser(null)

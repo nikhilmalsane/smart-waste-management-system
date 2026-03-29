@@ -68,7 +68,7 @@ export const deleteStaff = async (req, res) => {
             return res.status(404).json({ message : "Staff not found." })
         }
         
-        await staff.deleteOne()
+        await staff.deleteOne() 
 
         res.status(200).json({
             success : true,

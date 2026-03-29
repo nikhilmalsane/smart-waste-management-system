@@ -7,10 +7,10 @@ function Notification() {
     const fetchNotifications = async () => {
         try {
             const res = await apiRequest("/notification")
-            setNotification(res.data.data)
+            setNotification(res.data)
         } catch (error) {
             alert(error.message)
-        }
+        } 
     }
 
     useEffect(() => {
@@ -18,8 +18,12 @@ function Notification() {
     }, [])
 
     const markAsRead = async (id) => {
-        await apiRequest(`/notification/${id}`, "PUT")
-        fetchNotifications()
+        try {
+            await apiRequest(`/notification/${id}`, "PUT")
+            fetchNotifications()
+        } catch(error) {
+            alert(error.message)
+        }
     }
 
     return (

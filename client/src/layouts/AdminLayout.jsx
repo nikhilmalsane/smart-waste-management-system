@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext"
 
 function AdminLayout() {
     const { logout } = useContext(AuthContext);
@@ -12,7 +12,7 @@ function AdminLayout() {
                 .layout {
                     display : flex;
                     min-height : 100vh;
-                    background : #f4f6f8;
+                    background : #f4f6f8; 
                     font-family : Arial, sans-serif;
                 }
 
@@ -32,7 +32,7 @@ function AdminLayout() {
                 }
 
                 .logo img {
-                    width : 70px;
+                    width : 170px;
                     margin-bottom : 10px
                 }
 
@@ -51,7 +51,7 @@ function AdminLayout() {
                     transition : 0.2s;
                 }
 
-                .nav a hover {
+                .nav a:hover {
                     background : #2e7d32
                 }
 
@@ -86,6 +86,7 @@ function AdminLayout() {
                             <Link to="dashboard">Dashboard</Link>
                             <Link to="manage-bins">Manage Bins</Link>
                             <Link to="manage-staff">Manage Staff</Link>
+                            <Link to="assign-staff">Assign Staff</Link>
                             <Link to="staff-approvals">Staff Approvals</Link>
                             <Link to="offline-requests">Offline Requests</Link>
                             <Link to="Collection-history">Collection History</Link>
@@ -94,7 +95,7 @@ function AdminLayout() {
                         </nav>
 
                     </div>
-
+ 
                     <button className="logout" onClick={logout}>Logout</button>
                 </div>
 

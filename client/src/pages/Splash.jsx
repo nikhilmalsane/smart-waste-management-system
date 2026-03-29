@@ -30,7 +30,7 @@ const styles = {
         backgroundColor : "#f4f6f8"
     },
     logo : {
-        width : "150px",
+        width : "400px",
         marginBottom : "20px"
     }
 }

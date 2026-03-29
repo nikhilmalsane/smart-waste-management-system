@@ -14,13 +14,13 @@ function ManageBins() {
     const [longitude,setLongitude] = useState("")
 
     useEffect(() => { 
-        fetchBins()
+        fetchBins() 
     },[])
 
     const fetchBins = async () => {
         try {
-            const data = await apiRequest("/bins")
-            setBins(data)
+            const res = await apiRequest("/bins")
+            setBins(res.bins)
         } catch(error) {
             alert(error.message)
         }
@@ -73,10 +73,10 @@ function ManageBins() {
         }
     }
 
-    const fetchStaff = async () => {
+    const fetchStaff = async () => { 
         try {
             const data = await apiRequest("/admin")
-            setStaffList(data)
+            setStaffList(data.data)
         } catch(error) {
             alert(error.message)
         }

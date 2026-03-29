@@ -6,16 +6,21 @@ function MyCollections() {
 
     const fetchCollections = async () => {
         try {
-            const res = await apiRequest("/collections")
+            const res = await apiRequest("/collections") 
 
             const user = JSON.parse(localStorage.getItem("user"))
 
-            const myData = res.data.data.filter((item) => item.staff?._id === user._id)
-
+            const myData = res.data.filter(
+                (item) => item.staff?._id === user._id
+            )
             setData(myData)
-        } catch (error) {
+        } catch (error) { 
             alert(error.message)
         }
+    }
+
+    const formatDate = (date) => {
+        return new Date(date).toLocaleString()
     }
 
     useEffect(() => {

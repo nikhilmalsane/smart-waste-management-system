@@ -9,7 +9,7 @@ function AssignStaff() {
     const fetchBins = async () => {
         try {
             const res = await apiRequest("/bins")
-            setBins(res.data || res.bins)
+            setBins(res.bins)
         } catch(error) {
             alert(error.message)
         }
@@ -18,7 +18,7 @@ function AssignStaff() {
     const fetchStaff = async () => {
         try {
             const res = await apiRequest("/admin")
-            setBins(res.data || res.users)
+            setStaffList(res)
         } catch(error) {
             alert(error.message)
         }
@@ -32,10 +32,7 @@ function AssignStaff() {
     const assignStaff = async (binId, staffId) => {
         if(!staffId) return
         try {
-            await apiRequest(`/bins/assign/${binId}`,{
-                method:"PUT",
-                data : { staffId }
-            }) 
+            await apiRequest(`/bins/assign/${binId}`,"PUT", { staffId }) 
 
             fetchBins()
         } catch(error) {
@@ -45,7 +42,7 @@ function AssignStaff() {
 
     return (
         <div className="container">
-            <h2>Assign Staff to Bins</h2>
+            <h2>Assign Staff to Bins</h2> 
 
             <table>
                 <thead>
@@ -119,11 +116,11 @@ function AssignStaff() {
                         font-weight : bold;
                     }
 
-                    tr.nth-child(even) {
+                    tr:nth-child(even) {
                         background-color : #fafafa;
                     }
 
-                    tr.hover {
+                    tr:hover {
                         background-color : #f1f1f1
                     }
 
@@ -135,7 +132,7 @@ function AssignStaff() {
                         outline : none;
                     }
 
-                    select.hover {
+                    select:hover {
                         border-color : #2e7d32
                     }
 

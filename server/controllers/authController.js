@@ -46,7 +46,7 @@ export const registerUser = async (req, res) => {
 
 // function for login for exitixting error
 export const loginUser = async (req, res) => {
-    try {
+    try { 
         const { email, password } = req.body
 
         // checks whether the database have the user with this email or not

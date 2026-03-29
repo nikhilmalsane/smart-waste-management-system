@@ -21,7 +21,7 @@ function Register() {
     e.preventDefault()
 
     try {
-      await apiRequest.post("/auth/register", form)
+      await apiRequest("/auth/register", "POST", form)
       alert("Request sent for approval")
       navigate("/")
     } catch (error) {
@@ -100,12 +100,14 @@ function Register() {
         }
 
         input {
-          width: 100%;
-          padding: 10px;
+          width: 100%;              
+          padding: 12px 14px;
           border-radius: 8px;
           border: 1px solid #ccc;
           outline: none;
-          transition: 0.3s;
+          font-size: 14px;
+          box-sizing: border-box;   
+          transition: 0.2s;
         }
 
         input:focus {

@@ -25,7 +25,7 @@ import StaffMap from "./pages/staff/StaffMAp.jsx"
 import Profile from "./pages/staff/Profile.jsx"
 
 function App() {
-  return (
+  return ( 
     <div>
         <Routes>
             <Route path="/" element={<Splash />} />
@@ -37,12 +37,12 @@ function App() {
                 <ProtectedRoutes role="admin" >
                   <AdminLayout />
                 </ProtectedRoutes>} >
-                   <Route index element={<AdminDashboard />} />
+                   <Route path="dashboard" element={<AdminDashboard />} />
                    <Route path="manage-bins" element={<ManageBins />} />
                    <Route path="manage-staff" element={<ManageStaff />} />
                    <Route path="assign-staff" element={<AssignStaff />} />
                    <Route path="collection-history" element={<CollectionHistory />} />
-                   <Route path="offline-requests" element={<OfflineRequest />} />
+                   <Route path="offline-requests" element={<OfflineRequest />} /> 
                    <Route path="staff-approvals" element={<StaffApprovals />} />
                    <Route path="leaderboard" element={<Leaderboard />} />
                    <Route path="map-view" element={<MapView />} />

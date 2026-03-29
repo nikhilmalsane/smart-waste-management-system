@@ -9,7 +9,7 @@ export const apiRequest = async (endpoint, method = "GET", body = null) => {
     const options = {
         method,
         headers : {}  
-    }
+    } 
 
     // converting JS objects into JSON string only when body exists
     if(body) {

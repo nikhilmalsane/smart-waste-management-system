@@ -5,8 +5,8 @@ import authorizeRoles from "../middlewares/roleMiddleware.js"
 
 const router = express.Router()
 
-router.get("/", protect, authorizeRoles("admin"), getCollectionHistory)
+router.get("/", protect,  getCollectionHistory)
 router.post("/", protect, authorizeRoles("staff"), createCollectionHistory)
 router.get("/leaderboard", protect, authorizeRoles("admin"), getMonthlyLeaderboard)
 
-export default router    
+export default router      

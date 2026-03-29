@@ -45,7 +45,7 @@ export const getPendingStaffRequest = async (req, res) => {
 
         res.status(200).json({
             success : true,
-            message : "Get Pending Requests Successfully",
+            message : "Get Pending Requests Successfully", 
             requests
         })
     } catch(error) {

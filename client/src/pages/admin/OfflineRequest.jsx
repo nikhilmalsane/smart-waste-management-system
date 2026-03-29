@@ -19,10 +19,7 @@ function OfflineRequest() {
 
     const handleUpdate = async (id,status) => {
         try {
-            await apiRequest(`/offline/${id}`,{
-                method : "PUT",
-                data : {status}
-            })
+            await apiRequest(`/offline/${id}`, "PUT", {status})
 
             fetchRequests()
         } catch(error) {

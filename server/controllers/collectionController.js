@@ -29,7 +29,7 @@ export const createCollectionHistory = async (req, res) => {
         if(req.user.availability === "offline") {
             return res.status(403).json({ message : "You are offline. Cannot collect bins."})
         }
-        
+         
         // prevent duplicate entry
         if(bin.status === "empty") {
             return res.status(400).json({ message : "Bin already empty."})

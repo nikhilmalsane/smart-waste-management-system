@@ -6,14 +6,13 @@ function AdminDashboard() {
     const [stats,setStats] = useState(null)
 
     const token = localStorage.getItem("token")
-
+ 
     const fetchStats = async () => {
         try {
             const res = await apiRequest("/dashboard/admin")
 
-            if(res.success) {
-                setStats(res.data)
-            }
+            setStats(res) 
+    
         } catch(error) {
             alert(error.message)
         }

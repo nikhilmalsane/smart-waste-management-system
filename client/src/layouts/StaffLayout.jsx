@@ -11,7 +11,7 @@ function StaffLayout() {
         try {
             const res = await apiRequest("/notification")
 
-            const unread = res.data.data.filter((n) => !n.isRead)
+            const unread = res.data.filter((n) => !n.isRead)
             setCount(unread.length)
         } catch (error) {
             alert(error.message)
@@ -40,7 +40,7 @@ function StaffLayout() {
                     padding : 20px;
                     display : flex;
                     flex-direction : column;
-                    justify-content : space-between;
+                    justify-content : space-around;
                 }
 
                 .logo {
@@ -49,14 +49,14 @@ function StaffLayout() {
                 }
 
                 .logo img {
-                    width : 70px;
+                    width : 170px;
                     margin-bottom : 10px
                 }
 
                 .nav {
                     display : flex;
                     flex-direction : column;
-                    gap : 10px;
+                    gap : 0px;
                 }
 
                 .nav a {
@@ -68,7 +68,7 @@ function StaffLayout() {
                     transition : 0.2s;
                 }
 
-                .nav a hover {
+                .nav a:hover {
                     background : #2e7d32
                 }
 
@@ -109,7 +109,7 @@ function StaffLayout() {
                             <Link to="assigned-bins">My Assigned Bins</Link><br />
                             <Link to="collections">My Collections</Link><br />
                             <Link to="request-offline">Request Offline</Link><br />
-                            <Link to="notifications">Notifications {{ count }}</Link><br />
+                            <Link to="notifications">Notifications ({ count })</Link><br />
                             <Link to="map">Map View</Link><br />
                             <Link to="profile">Profile</Link><br />
                         </nav>

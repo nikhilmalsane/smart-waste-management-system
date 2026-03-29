@@ -22,7 +22,7 @@ function StaffMap() {
 
             const myBins = res.bins.filter(
                 (bin) => bin.assignedStaff?._id === user._id
-            );
+            )
 
             setBins(myBins);
         } catch (error) {

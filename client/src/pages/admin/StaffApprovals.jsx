@@ -7,11 +7,11 @@ function StaffApprovals() {
     const fetchRequests = async () => {
         try {
             const data = await apiRequest("/users/staff-requests")
-            setRequests(data)
+            setRequests(data.requests)
         } catch(error) {
             alert(error.message)
         }
-    }
+    } 
 
     useEffect(() => {
         fetchRequests()

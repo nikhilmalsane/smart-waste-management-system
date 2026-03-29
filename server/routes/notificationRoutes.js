@@ -8,4 +8,4 @@ const router = express.Router()
 router.get("/", protect, authorizeRoles("staff"), getNotifications)
 router.put("/:id", protect, authorizeRoles("staff"), markAsRead)
 
-export default router
+export default router 

@@ -6,11 +6,11 @@ function MyAssignedBins() {
 
     const fetchBins = async () => {
         try {
-            const res = await apiRequest.get("/bins")
+            const res = await apiRequest("/bins")
 
             const user = JSON.parse(localStorage.getItem("user"))
 
-            const myBins = res.data.bins.filter((bin) => bin.assignedStaff?._id === user._id)
+            const myBins = res.bins.filter((bin) => bin.assignedStaff?._id === user._id)
 
             setBins(myBins)
         } catch (error) {

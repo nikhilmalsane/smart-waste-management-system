@@ -13,21 +13,21 @@ function Login() {
     e.preventDefault()
 
     try {
-      const res = await apiRequest.post("/auth/login", {
+      const res = await apiRequest("/auth/login", "POST" , {
         email,
         password,
       })
 
-      const user = res.data
-      localStorage.setItem("token", user.token)
+      localStorage.setItem("token", res.token)
+      localStorage.setItem("user", JSON.stringify(res.user))
 
-      if (user.role === "admin") {
+      if (res.user.role === "admin") {
         navigate("/admin")
       } else {
         navigate("/staff")
       }
-    } catch (err) {
-      alert("Invalid Credentials")
+    } catch (error) {
+      alert(error.message)
     }
   };
 
@@ -100,11 +100,14 @@ function Login() {
         }
 
         input {
-          width: 100%;
-          padding: 10px;
+          width: 100%;              
+          padding: 12px 14px;
           border-radius: 8px;
           border: 1px solid #ccc;
           outline: none;
+          font-size: 14px;
+          box-sizing: border-box;   
+          transition: 0.2s;
         }
 
         input:focus {

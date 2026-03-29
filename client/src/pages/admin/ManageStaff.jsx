@@ -9,13 +9,13 @@ function ManageStaff() {
         email : "",
         password : ""
     })
-
+  
     const [editingStaff,setEditingStaff] = useState(null)
 
     const fetchStaff = async () => {
         try {
-            const data = await apiRequest("/admin")
-            setStaff(data)
+            const res = await apiRequest("/admin")
+            setStaff(res.data)
         } catch(error) {
             alert(error.message)
         }

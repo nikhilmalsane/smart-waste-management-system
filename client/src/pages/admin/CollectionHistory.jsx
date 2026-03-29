@@ -9,13 +9,13 @@ function CollectionHistory() {
 
     const fetchHistory = async () => {
         try {
-            const query = `?page=${page}${area ?`area=${area}`:""}`
+            const query = `?page=${page}${area ?`&area=${area}` : ""}`
             const res = await apiRequest(`/collections${query}`)
 
             setHistory(res.data)
             setPages(res.pages)
         } catch(error) {
-            alert(error.message)
+            alert(error.message) 
         }
     }
 
@@ -46,9 +46,11 @@ function CollectionHistory() {
                             <tr key={h._id}>
                                 <td>{h.bin?.location}</td>
                                 <td>{h.area}</td>
-                                <span className={h.statusBeforeCollection}>
-                                    <td>{h.statusBeforeCollection}</td>
-                                </span>
+                                <td>
+                                    <span className={h.statusBeforeCollection}>
+                                        {h.statusBeforeCollection}
+                                    </span>
+                                </td>
                                 <td>{h.staff?.name}</td>
                                 <td>{new Date(h.collectedAt).toLocaleString()}</td>
                             </tr>
@@ -107,11 +109,11 @@ function CollectionHistory() {
                         color : white;
                     }
 
-                    tr.nth-child(even) {
+                    tr:nth-child(even) {
                         background-color : #fafafa;
                     }
 
-                    tr.hover {
+                    tr:hover {
                         background-color : #f1f1f1;
                     }
 

@@ -50,7 +50,7 @@ export const getAllBins = async (req, res) => {
         const limit = parseInt(req.query.limit) || 5
 
         // search and filter
-        const search = req.params.search || ""
+        const search = req.query.search || ""
         const area = req.query.area 
         const status = req.query.status 
         const sort = req.query.sort || "desc"
@@ -64,7 +64,7 @@ export const getAllBins = async (req, res) => {
 
         // filter by area 
         if(area) {
-            filter.area = area
+            filter.location = area
         }
 
         // filter by status
@@ -88,7 +88,7 @@ export const getAllBins = async (req, res) => {
             .populate("assignedStaff", "name email")
             .sort({ createdAt : sortOption })
             .skip(skip)
-            .limit(limit) 
+             
 
         res.status(200).json({
             success : true,
@@ -96,7 +96,7 @@ export const getAllBins = async (req, res) => {
             totalPages : Math.ceil(total / limit),
             totalBins : total,
             bins
-        })
+        }) 
     } catch(error) {
         res.status(500).json({ message : "Server Error" })
     }

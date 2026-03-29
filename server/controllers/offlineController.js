@@ -108,7 +108,7 @@ export const updateRequestStatus = async (req, res) => {
 }
 
 export const goOnline = async (req, res) => {
-    try {
+    try { 
 
         if(req.user.role !== "staff") {
             return res.status(403).json({ message : "Only staff can change availability." })

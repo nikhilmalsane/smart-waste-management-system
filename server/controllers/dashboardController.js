@@ -123,7 +123,7 @@ export const getAdminDashboardStats = async (req, res) => {
             {
                 $group : {
                     _id : {
-                        area : "$binDetails.location",
+                        area : "$_id.location",
                         month : { $month : "$createdAt" }
                     },
                     totalCollections : { $sum : 1 }
@@ -182,14 +182,12 @@ export const getAdminDashboardStats = async (req, res) => {
 
         // response
         res.status(200).json({
-            success : true,
-            data : {
                 bins : {
                     total : totalBins,
                     ...binstats
                 },
                 areaDistribution,
-                staff : {
+                staff : { 
                     total : totalStaff,
                     ...staffStats
                 },
@@ -200,7 +198,6 @@ export const getAdminDashboardStats = async (req, res) => {
                     monthlyAreaPerformance
                 },
                 topStaff
-            }
         })
     } catch(error) {
         res.status(500).json({ message : "Server Error" })

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { apiRequest } from "../../api/api";
 
 function StaffDashboard() {
@@ -7,11 +7,15 @@ function StaffDashboard() {
     const fetchStats = async () => {
         try {
             const res = await apiRequest("/dashboard/staff")
-            setStats(res.data.stats)
+            setStats(res)
         } catch (error) {
             alert(error.message)
         }
     }
+
+    useEffect(() => {
+        fetchStats()
+    },[])
 
     if (!stats) return <p>Loading...</p>
 

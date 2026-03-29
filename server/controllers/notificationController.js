@@ -2,7 +2,10 @@ import Notification from "../models/Notification.js"
 
 export const getNotifications = async (req, res) => {
     try {
-        const notifications = await Notification.find({ user : req.user._id}).sort({ createdAt : -1 })
+        const notifications = await Notification.find({ 
+            user : req.user._id,
+            isRead : false
+        }).sort({ createdAt : -1 })
 
         res.json({
             success : true,
@@ -11,7 +14,7 @@ export const getNotifications = async (req, res) => {
     } catch(error) {
         res.status(500).json({ message : "Server Error" })
     }
-}
+} 
 
 export const markAsRead = async (req, res) => {
     try {
