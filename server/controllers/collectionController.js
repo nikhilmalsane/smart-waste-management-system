@@ -1,6 +1,6 @@
-import CollectionHistory from "../models/CollectionHistory"
-import Bin from "../models/Bin"
-import User from "../models/User"
+import CollectionHistory from "../models/CollectionHistory.js"
+import Bin from "../models/Bin.js"
+import User from "../models/User.js"
 
 export const createCollectionHistory = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ export const createCollectionHistory = async (req, res) => {
             success : false,
             message : "Bin not found."
            })
-        }
+        } 
 
         // check if staff is assignedStaff or not
         // first condition tells that check this condition if you are staff , if you are admin you dont need to pass this condition
@@ -38,7 +38,7 @@ export const createCollectionHistory = async (req, res) => {
         const newCollection = await CollectionHistory.create({
             bin : bin._id,
             staff : req.user._id,
-            area : bin.area,
+            area : bin.location, 
             statusBeforeCollection : bin.status
         })
 
@@ -83,7 +83,7 @@ export const getCollectionHistory = async (req, res) => {
         const history = await CollectionHistory.find(query)
             .populate("bin", "location status")   // showing bin location and status instead of id
             .populate("staff", "name email")     // showing name and email of staff collected that bin
-            .sort({ createdAt : -1 })            // this for adding new added record at first using descending logic of -1 for createdAT
+            .sort({ collectedAt : -1 })            // this for adding new added record at first using descending logic of -1 for createdAT
             .skip(( page - 1 ) * limit)          // skip logic 
             .limit(Number(limit))               // limit to show limited records
 
@@ -112,7 +112,7 @@ export const getMonthlyLeaderboard = async (req, res) => {
         const leaderboard = await CollectionHistory.aggregate([
             {
                 $match : {
-                    createdAt : { $gte : startOfMonth }
+                    collectedAt : { $gte : startOfMonth }
                 }
             },
             {
@@ -161,4 +161,4 @@ export const getMonthlyLeaderboard = async (req, res) => {
     } catch(error) {
         res.status(500).json({ message : "Server Error" })
     }
-}
+} 

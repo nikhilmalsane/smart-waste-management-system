@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     availability : {  // for staff only 
         type : String,
         enum : [ "available", "busy", "offline" ],
-        default : "available"
+        default : "available"  
     }
 },
 {

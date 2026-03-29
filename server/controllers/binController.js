@@ -1,10 +1,18 @@
 import Bin from "../models/Bin.js"
 import User from "../models/User.js"
+import Notification from "../models/Notification.js"
 
 // Admin adding new bin
 export const addBin = async (req,res) => {
     try {
-        const { location, fillLevel, latitude, longitude } = req.body
+        const { binId, location, fillLevel, latitude, longitude } = req.body
+
+        if(!binId || !location || !latitude || !longitude) {
+            return res.status(400).json({ message :"All fields required" })
+        }
+
+        const exists = await Bin.findOne({ binId })
+        if(exists) return res.status(400).json({ message : "Bin already exists" })
 
         let status = "empty"
 
@@ -14,8 +22,9 @@ export const addBin = async (req,res) => {
             status = "partial"
         }
 
-        // new bin creation
+        // new bin creation 
         const bin = await Bin.create({
+            binId,
             location,
             fillLevel,
             status,
@@ -50,7 +59,7 @@ export const getAllBins = async (req, res) => {
 
         // search by location
         if(search) {
-            filter.location = { $regrex : search, $options : "i"}
+            filter.location = { $regex : search, $options : "i"}
         }  
 
         // filter by area 
@@ -79,7 +88,7 @@ export const getAllBins = async (req, res) => {
             .populate("assignedStaff", "name email")
             .sort({ createdAt : sortOption })
             .skip(skip)
-            .limit(limit)
+            .limit(limit) 
 
         res.status(200).json({
             success : true,
@@ -152,12 +161,12 @@ export const assignStaff = async (req, res) => {
         const bin = await Bin.findById(id)
 
         // if bin not found with that id
-        if(!bin) {
+        if(!bin) { 
             return res.status(404).json({ message : "Bin not found." })
         }
 
         // to prevent double assign
-        if(bin.assignedStaff) {
+        if(bin.assignedStaff && bin.status !== "empty") {
             return res.status(400).json({ message : "Bin already assigned." })
         }
 
@@ -174,13 +183,19 @@ export const assignStaff = async (req, res) => {
             return res.status(400).json({ message : `Staff is ${staff.availability}.` })
         }
 
-        // assign the other available staff and change his availability to busy
+        // assign the other available staff and change his availability to busy  
         bin.assignedStaff = staffId
         staff.availability = "busy"
 
         // save updated changes in database
         await bin.save()
         await staff.save()
+
+        // create notification for staff
+        await Notification.create({
+            user : staffId,
+            message : `New bin assigned at ${bin.location}`
+        })
 
         res.json({
             success : true,

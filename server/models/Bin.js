@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const binSchema = new mongoose.Schema({
     binId : {
-        type : String,
+        type : String, 
         required : true,
         unique : true,
         trim : true
@@ -13,7 +13,7 @@ const binSchema = new mongoose.Schema({
         trim : true
     },
     fillLevel : {
-        type : Number,
+        type : Number, 
         required : true, 
         min : 0,
         max : 100,

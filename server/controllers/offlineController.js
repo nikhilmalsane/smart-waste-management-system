@@ -31,7 +31,7 @@ export const createOfflineRequest = async (req, res) => {
             success : true,
             message : "Offline Request sent to admin.",
             request
-        })
+        }) 
     } catch(error) {
         res.status(500).json({ message : "Server Error" })
     }

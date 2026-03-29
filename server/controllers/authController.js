@@ -1,32 +1,40 @@
 import User from "../models/User.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+import StaffRequest from "../models/StaffRequest.js"
 
 // function of registering new user
 export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body
 
+        if(!name || !email || !password) { 
+            return res.status(400).json({ message :"All fields required" })
+        }
+
         // checking if user already exist with email
         const userExists = await User.findOne({ email })
-        if(userExists) {
-        return res.status(400).json({ message : "User already exixts"})
+
+        // checking if this user has already send register user
+        const requestExists = await StaffRequest.findOne({ email })
+
+        if(userExists || requestExists) {
+        return res.status(400).json({ message : "User already exixts or already have pending request."})
         }
 
         // converting the password in hashed before storing it in database
         const hashedPassword = await bcrypt.hash(password, 10)
 
         // if new then creating new user
-        const user = await User.create({
+        await StaffRequest.create({
             name,
             email,
-            password : hashedPassword,
-            role : "staff"
+            password : hashedPassword
         })
 
         res.status(201).json({ 
             success : true,
-            message : "User registered succesfully"
+            message : "Registration request sent successfully."
         })
     } 
     // if any server error occur
@@ -64,7 +72,13 @@ export const loginUser = async (req, res) => {
         // sending token to user
         res.status(200).json({
             success : true,
-            token
+            token,
+            user : {
+                _id : user._id,
+                name : user.name,
+                email : user.email,
+                role : user.role
+            }
         })
     } 
     catch(error)

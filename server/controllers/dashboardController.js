@@ -34,7 +34,7 @@ export const getAdminDashboardStats = async (req, res) => {
         const areaDistribution = await Bin.aggregate([
             {
                 $group : {
-                    _id : "$area",
+                    _id : "$location",
                     totalBins : { $sum : 1 },
                     fullBins : {
                         $sum : {
@@ -64,7 +64,7 @@ export const getAdminDashboardStats = async (req, res) => {
                 }
             },
             {
-                $sort : { area : 1 }
+                $sort : { location : 1 }
             }
         ])
 
@@ -72,7 +72,7 @@ export const getAdminDashboardStats = async (req, res) => {
         const totalStaff = await User.countDocuments({ role : "staff" })
 
         const staffAvailablityStats = await User.aggregate([
-            { $match : { $role : "staff" } },
+            { $match : { role : "staff" } },
             {
                 $group : {
                     _id : "$availability",
@@ -123,7 +123,7 @@ export const getAdminDashboardStats = async (req, res) => {
             {
                 $group : {
                     _id : {
-                        area : "$binDetails.area",
+                        area : "$binDetails.location",
                         month : { $month : "$createdAt" }
                     },
                     totalCollections : { $sum : 1 }
@@ -132,7 +132,7 @@ export const getAdminDashboardStats = async (req, res) => {
             {
                 $project : {
                     _id : 0,
-                    area : "$_id.area",
+                    area : "$_id.location",
                     month : "$_id.month",
                     totalCollections : 1
                 }
@@ -209,13 +209,14 @@ export const getAdminDashboardStats = async (req, res) => {
 
 export const getStaffDashboardStats = async (req, res) => {
     try {
-        const staffId = req.user.id
+        const staffId = req.user._id
 
         // Date calculations
         const todayStart = new Date()
         todayStart.setHours(0, 0, 0, 0)
 
-        const monthStart = new Date(1)
+        const monthStart = new Date()
+        monthStart.setDate(1)
         monthStart.setHours(0, 0, 0, 0)
 
         // collections count 
@@ -260,12 +261,12 @@ export const getStaffDashboardStats = async (req, res) => {
             }
         ])
 
-        const staffRank = leaderboard.findIndex((item) => item._id.toString() === staffId) + 1
+        const staffRank = leaderboard.findIndex((item) => item._id.toString() === staffId.toString()) + 1
 
         res.status(200).json({
             success : true,
-            stats : {
-                todayCollections,
+            stats : { 
+                todayCollections, 
                 monthlyCollections,
                 totalCollections,
                 monthlyTarget,
@@ -275,7 +276,7 @@ export const getStaffDashboardStats = async (req, res) => {
         })
     } catch(error) {
         res.status(500).json({ message : "Server Error" })
-    }
+    } 
 }
 
 export const getMapBins = async (req, res) => {
