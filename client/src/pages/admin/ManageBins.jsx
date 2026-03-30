@@ -2,26 +2,26 @@ import { useEffect, useState } from "react";
 import { apiRequest } from "../../api/api";
 
 function ManageBins() {
-    const [bins,setBins] = useState([])
-    const [staffList,setStaffList] = useState([])
-    const [assigningBinId,setAssigningBinId] = useState(null)
-    const [selectedStaffId,setSelectedStaffId] = useState("")
+    const [bins, setBins] = useState([])
+    const [staffList, setStaffList] = useState([])
+    const [assigningBinId, setAssigningBinId] = useState(null)
+    const [selectedStaffId, setSelectedStaffId] = useState("")
 
-    const [binId,setBinId] = useState("")
-    const [location,setLocation] = useState("")
-    const [fillLevel,setFillLevel] = useState(0)
-    const [latitude,setLatitude] = useState("")
-    const [longitude,setLongitude] = useState("")
+    const [binId, setBinId] = useState("")
+    const [location, setLocation] = useState("")
+    const [fillLevel, setFillLevel] = useState(0)
+    const [latitude, setLatitude] = useState("")
+    const [longitude, setLongitude] = useState("")
 
-    useEffect(() => { 
-        fetchBins() 
-    },[])
+    useEffect(() => {
+        fetchBins()
+    }, [])
 
     const fetchBins = async () => {
         try {
             const res = await apiRequest("/bins")
             setBins(res.bins)
-        } catch(error) {
+        } catch (error) {
             alert(error.message)
         }
     }
@@ -43,7 +43,7 @@ function ManageBins() {
             setLongitude("")
 
             fetchBins()
-        } catch(error) {
+        } catch (error) {
             alert(error.message)
         }
     }
@@ -51,50 +51,49 @@ function ManageBins() {
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this bin?")
 
-        if(!confirmDelete) return
-        
+        if (!confirmDelete) return
+
         try {
-            await apiRequest(`/bins/delete/${id}`, "PUT")
+            await apiRequest(`/bins/delete/${id}`, "DELETE")
             fetchBins()
-        } catch(error) {
+        } catch (error) {
             alert(error.message)
         }
     }
 
-    const handleStatusUpdate = async (id, newStatus) => {
+    const handleFillUpdate = async (id, fillLevel) => {
         try {
             await apiRequest(`/bins/update-status/${id}`, "PUT", {
-                status : newStatus
+                fillLevel: Number(fillLevel)
             })
 
             fetchBins()
-        } catch(error) {
+        } catch (error) {
             alert(error.message)
         }
     }
-
-    const fetchStaff = async () => { 
+    const fetchStaff = async () => {
         try {
             const data = await apiRequest("/admin")
             setStaffList(data.data)
-        } catch(error) {
+        } catch (error) {
             alert(error.message)
         }
     }
     const handleAssign = async (binId) => {
-        if(!selectedStaffId) {
+        if (!selectedStaffId) {
             alert("Please select staff")
             return
         }
         try {
             await apiRequest(`/bins/assign/${binId}`, "PUT", {
-                staffId : selectedStaffId
+                staffId: selectedStaffId
             })
 
             setAssigningBinId(null)
             setSelectedStaffId("")
             fetchBins()
-        } catch(error) {
+        } catch (error) {
             alert(error.message)
         }
     }
@@ -119,6 +118,7 @@ function ManageBins() {
                         <th>Bin ID</th>
                         <th>Location</th>
                         <th>Fill Level</th>
+                        <th>Update</th>
                         <th>Status</th>
                         <th>Assigned Staff</th>
                         <th>Actions</th>
@@ -132,11 +132,23 @@ function ManageBins() {
                                 <td>{bin.location}</td>
                                 <td>{bin.fillLevel}%</td>
                                 <td>
-                                    <select value={bin.status} onChange={(e) => handleStatusUpdate(bin._id, e.target.value)}>
-                                        <option value="empty">Empty</option>
-                                        <option value="partial">Partial</option>
-                                        <option value="full">Full</option>
-                                    </select>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        value={bin.fillLevel}
+                                        onChange={(e) =>
+                                            handleFillUpdate(bin._id, e.target.value)
+                                        }
+                                        style={{ width: "60px" }}
+                                    /> %
+                                </td>
+                                <td>
+                                    {bin.fillLevel > 0 &&  bin.fillLevel < 20
+                                        ? "Empty"
+                                        : bin.fillLevel > 20 && bin.fillLevel < 80
+                                            ? "Partial"
+                                            : "Full"}
                                 </td>
                                 <td>
                                     {
@@ -146,8 +158,8 @@ function ManageBins() {
                                 <td>
                                     <button
                                         onClick={() => {
-                                         setAssigningBinId(bin._id)
-                                         fetchStaff()
+                                            setAssigningBinId(bin._id)
+                                            fetchStaff()
                                         }}
                                     >Assign</button>
                                     {
@@ -157,7 +169,7 @@ function ManageBins() {
                                                     <option value="">Select Staff</option>
                                                     {
                                                         staffList.map((staff) => (
-                                                            <option key={staff._id} value={staff._id}>{staff.name}</option>      
+                                                            <option key={staff._id} value={staff._id}>{staff.name}</option>
                                                         ))
                                                     }
                                                 </select>

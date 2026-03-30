@@ -90,7 +90,7 @@ export const getAllBins = async (req, res) => {
             .skip(skip)
              
 
-        res.status(200).json({
+        res.status(200).json({ 
             success : true,
             page,
             totalPages : Math.ceil(total / limit),
@@ -106,48 +106,56 @@ export const getAllBins = async (req, res) => {
 export const updateBinStatus = async (req, res) => {
     try {
         const { id } = req.params
-        const { status, fillLevel } = req.body
+        const { fillLevel } = req.body
 
-        // find that bin with reference to id 
         const bin = await Bin.findById(id)
 
-        // if that bin not found
-        if(!bin) {
-            return res.status(404).json({ message : "Bin not found "})
+        if (!bin) {
+            return res.status(404).json({ message: "Bin not found" })
         }
 
-        // check if staff is assignedStaff or not
-        // first condition tells that check this condition if you are staff , if you are admin you dont need to pass this condition
-        // second condition checks whether this bin is assigned to login staff or not
-        // we check using assignedStaff's id and login staff's id 
-        // '?' is to handle if no staff is assigned to bin
-        // toString is used to compare the id's completely as object _id are normal string 
-        if( req.user.role === "staff" && bin.assignedStaff?.toString() !== req.user._id.toString() ) {
-             return res.status(403).json({ message : "Access denied. You can only update your assigned bins. "})
+        if (
+            req.user.role === "staff" &&
+            bin.assignedStaff?.toString() !== req.user._id.toString()
+        ) {
+            return res.status(403).json({
+                message: "Access denied. You can only update your assigned bins."
+            })
         }
 
-        // staff can not manually change the status
-        if(req.user.role === "staff" && status === "empty") {
-            return res.status(400).json({ message : "Use API Collection to empty bin."})
-        }
-        // if staff is correct than update the changes
-        if(status){
-            bin.status = status
+        if (fillLevel === undefined) {
+            return res.status(400).json({ message: "Fill level is required" })
         }
 
-        if(fillLevel !== undefined) {
-            bin.fillLevel = fillLevel
+        const level = Number(fillLevel)
+
+        if (isNaN(level) || level < 0 || level > 100) {
+            return res.status(400).json({
+                message: "Fill level must be between 0 and 100"
+            })
         }
-        
-        // save updates to database
+
+        bin.fillLevel = level
+
+        if (level === 0) {
+            bin.status = "empty"
+        } else if (level < 80) {
+            bin.status = "partial"
+        } else {
+            bin.status = "full"
+        }
+
         await bin.save()
 
         res.status(200).json({
-            success : true,
-            message : "Bin Updated Successfully"
+            success: true,
+            message: "Bin updated successfully",
+            data: bin
         })
-    } catch(error) {
-        res.status(500).json({ message : "Server Error "})
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: "Server Error" })
     }
 }
 

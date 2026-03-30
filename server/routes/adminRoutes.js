@@ -10,4 +10,4 @@ router.put("/update/:id", protect, authorizeRoles("admin"), updateStaff)
 router.delete("/delete/:id", protect, authorizeRoles("admin"), deleteStaff)
 router.get("/", protect, authorizeRoles("admin"), getAllStaff)
 
-export default router   
+export default router    

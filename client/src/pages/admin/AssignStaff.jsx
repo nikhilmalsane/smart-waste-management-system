@@ -18,7 +18,7 @@ function AssignStaff() {
     const fetchStaff = async () => {
         try {
             const res = await apiRequest("/admin")
-            setStaffList(res)
+            setStaffList(res.data)
         } catch(error) {
             alert(error.message)
         }

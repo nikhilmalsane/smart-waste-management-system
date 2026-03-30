@@ -38,16 +38,30 @@ export const addStaff = async (req, res) => {
 // to update any staff
 export const updateStaff = async (req, res) => {
     try {
+
+        console.log("REQ BODY:", req.body)
+
         const staff = await User.findById(req.params.id)
 
         if(!staff || staff.role !== "staff") {
             return res.status(404).json({ message : "Staff not found." })
         }
 
-        staff.name = req.body.name || staff.name
-        staff.email = req.body.email || staff.email
+        if (req.body.name !== undefined) {
+            staff.name = req.body.name
+        }
+
+        if (req.body.email !== undefined) {
+            staff.email = req.body.email
+        }
+
+        if (req.body.availability !== undefined) {
+            staff.availability = req.body.availability
+        }
 
         await staff.save()
+
+        console.log("UPDATED STAFF:", staff)
 
         res.status(200).json({ 
             success : true,
@@ -70,7 +84,7 @@ export const deleteStaff = async (req, res) => {
         
         await staff.deleteOne() 
 
-        res.status(200).json({
+        res.status(200).json({ 
             success : true,
             message : "Staff deleted successfully."
         })

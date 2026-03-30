@@ -58,16 +58,23 @@ function ManageStaff() {
     }
 
     const handleUpdate = async () => {
-        try {
-            await apiRequest(`/admin/update/${editingStaff._id}`, "PUT", editingStaff)
+    try {
+        const res = await apiRequest(
+            `/admin/update/${editingStaff._id}`,
+            "PUT",
+            editingStaff
+        )
 
-            setEditingStaff(null)
+        console.log("Updated Staff : ",res.data)
 
-            fetchStaff()
-        } catch(error) {
-            alert(error.message)
-        }
+        setEditingStaff(null)
+
+        fetchStaff()
+
+    } catch(error) {
+        alert(error.message)
     }
+}
 
     return (
         <div className="staff-container">

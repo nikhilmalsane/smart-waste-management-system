@@ -24,7 +24,7 @@ app.use("/api/bins", binRoutes)
 app.use("/api/offline", offlineRoutes)
 app.use("/api/collections", collectionRoutes)  
 app.use("/api/dashboard", dashboardRoutes)
-app.use("/api/notification", notificationRoutes)
+app.use("/api/notification", notificationRoutes) 
 
 app.use("/api/users", userRoutes)
 app.use("/api/admin", adminRoutes)
