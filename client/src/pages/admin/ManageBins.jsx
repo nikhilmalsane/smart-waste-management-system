@@ -12,7 +12,7 @@ function ManageBins() {
     const [fillLevel, setFillLevel] = useState(0)
     const [latitude, setLatitude] = useState("")
     const [longitude, setLongitude] = useState("")
-
+ 
     useEffect(() => {
         fetchBins()
     }, [])

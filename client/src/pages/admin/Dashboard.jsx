@@ -10,10 +10,10 @@ function AdminDashboard() {
     const fetchStats = async () => {
         try {
             const res = await apiRequest("/dashboard/admin")
-
+            console.log("API RESPONSE:", res)
             setStats(res) 
     
-        } catch(error) {
+        } catch(error) { 
             alert(error.message)
         }
     }
@@ -22,7 +22,7 @@ function AdminDashboard() {
         fetchStats()
     },[])
 
-    if(!stats) return <p>Loading...</p>
+    if(stats === null) return <p>Loading...</p>
 
     return (
         <div>
@@ -51,7 +51,7 @@ function AdminDashboard() {
                             <div>
                                 <h2>Collections</h2>
                                 <p>Today : {stats.collections.today}</p>
-                                <p>This Month : {stats.collections.monthly}</p>
+                                <p>This Month : {stats.collections.monthly.length}</p>
                             </div>
 
                             <hr />
